@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: reviews
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: reviews
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          project: default
+      podSelector:
+        matchLabels:
+          app: productpage
+    ports:
+    - protocol: TCP
+      port: 9080
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          project: default
+      podSelector:
+        matchLabels:
+          app: ratings
+    ports:
+    - protocol: TCP
+      port: 9080
