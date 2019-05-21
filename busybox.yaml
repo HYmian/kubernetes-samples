@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+spec:
+  containers:
+  - name: box
+    image: elasticsearch
+    # securityContext:
+    #   procMount: Unmasked
+    command: 
+    - sh
+    args:
+    - -c
+    - sleep 3600
