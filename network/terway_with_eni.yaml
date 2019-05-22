@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eni-demo
+spec:
+  containers:
+  - name: eni-demo
+    image: nginx
+    resources:
+      limits:
+        aliyun/eni: 1
