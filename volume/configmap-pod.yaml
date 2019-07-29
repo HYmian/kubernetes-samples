@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: configmap-pod
+spec:
+  containers:
+    - name: test
+      image: busybox
+      volumeMounts:
+        - name: config
+          mountPath: /etc/game.properties
+          subPath: game.properties
+        - name: test
+          mountPath: /var/ui.properties
+      tty: true
+  volumes:
+    - name: config
+      configMap:
+        name: game-config
+        items:
+          - key: game.properties
+            path: game.properties
+    - name: test
+      configMap:
+        name: game-config
+        items:
+        - key: ui.properties
+          path: ui.properties
