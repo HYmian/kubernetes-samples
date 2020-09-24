@@ -1,0 +1,26 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  labels:
+    run: eviction
+  name: eviction
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: eviction
+  template:
+    metadata:
+      labels:
+        run: eviction
+    spec:
+      containers:
+        - image: vish/stress
+          args:
+          - -mem-total
+          - 32Gi
+          - -mem-alloc-size
+          - 256Mi
+          imagePullPolicy: Always
+          name: eviction
+      restartPolicy: Always

@@ -1,0 +1,29 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  labels:
+    run: oom
+  name: oom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: oom
+  template:
+    metadata:
+      labels:
+        run: oom
+    spec:
+      containers:
+        - image: vish/stress
+          args:
+          - -mem-total
+          - 2Gi
+          - -mem-alloc-size
+          - 256Mi
+          imagePullPolicy: Always
+          name: oom
+          resources:
+            limits:
+              memory: "1Gi"
+      restartPolicy: Always

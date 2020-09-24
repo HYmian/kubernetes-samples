@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qos-demo
+  labels:
+    app: qos-demo
+spec:
+  containers:
+  - name: qos-demo-ctr
+    image: nginx
+    env:
+    - name: TEST
+      value: "false"
+    resources:
+      limits:
+        memory: "12Gi"
+        cpu: "700m"
+      requests:
+        memory: "12Gi"
+        cpu: "700m"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qos-demo-2
+  labels:
+    app: burstable
+spec:
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+          - key: app
+            operator: In
+            values:
+            - qos-demo
+        topologyKey: kubernetes.io/hostname
+  containers:
+  - name: qos-demo-2-ctr
+    image: vish/stress
+    args:
+    - -mem-total
+    - 8G
+    resources:
+      requests:
+        memory: "100Mi"
