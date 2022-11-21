@@ -1,5 +1,5 @@
 module "ack" {
-  source = "../modules/managed"
+  source = "./"
 
   alicloud_access_key = var.alicloud_access_key
 
