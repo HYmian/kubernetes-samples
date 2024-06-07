@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: eci
+  name: eci-spread
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eci
+  template:
+    metadata:
+      labels:
+        app: eci
+    spec:
+      tolerations:
+      - key: virtual-kubelet.io/provider
+        operator: Equal
+        value: alibabacloud
+        effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - virtual-kubelet
+      topologySpreadConstraints:
+      - maxSkew: 1
+        minDomains: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: eci
+        matchLabelKeys: # 可选；自从 v1.27 开始成为 Beta
+          - pod-template-hash
+        nodeAffinityPolicy: Honor # 可选；自从 v1.26 开始成为 Beta
+        nodeTaintsPolicy: Honor # 可选；自从 v1.26 开始成为 Beta
+      containers:
+        - image: nginx:alpine
+          name: nginx
+      restartPolicy: Always
